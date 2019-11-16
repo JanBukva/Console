@@ -8,43 +8,43 @@ cache:
     - $HOME/phpcs-cache
 
 php:
-  - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 env:
   matrix:
+    - RUN_TESTS=1 SYMFONY=5.* # dev
     - RUN_TESTS=1 SYMFONY=4.* # dev
     - RUN_TESTS=1 SYMFONY=3.* # dev
-    - RUN_TESTS=1 SYMFONY=2.* # dev
+    - RUN_TESTS=1 SYMFONY=5.* COMPOSER_EXTRA_ARGS="--prefer-stable"
     - RUN_TESTS=1 SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
     - RUN_TESTS=1 SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable"
-    - RUN_TESTS=1 SYMFONY=2.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - RUN_TESTS=1 SYMFONY=5.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
     - RUN_TESTS=1 SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
     - RUN_TESTS=1 SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
-    - RUN_TESTS=1 SYMFONY=2.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
 
 matrix:
   fast_finish: true
   include:
-    - php: 7.3
-      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
-    - php: 7.3
-      env: RUN_TESTS=0 SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" PHPSTAN=1
-    - php: 7.3
-      env: RUN_TESTS=0 SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" CODING_STANDARD=1
+    - php: 7.4
+      env: SYMFONY=5.* COMPOSER_EXTRA_ARGS="--prefer-stable" COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
+    - php: 7.4
+      env: RUN_TESTS=0 SYMFONY=5.* COMPOSER_EXTRA_ARGS="--prefer-stable" PHPSTAN=1
+    - php: 7.4
+      env: RUN_TESTS=0 SYMFONY=5.* COMPOSER_EXTRA_ARGS="--prefer-stable" CODING_STANDARD=1
   exclude:
-    - php: 7.3
+    - php: 7.4
       env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
   allow_failures:
+    - env: RUN_TESTS=1 SYMFONY=5.*
     - env: RUN_TESTS=1 SYMFONY=4.*
     - env: RUN_TESTS=1 SYMFONY=3.*
-    - env: RUN_TESTS=1 SYMFONY=2.*
 
 before_install:
-  - if [[ $SYMFONY = '2.*' ]]; then composer require --no-update symfony/console:^2.8; fi
   - if [[ $SYMFONY = '3.*' ]]; then composer require --no-update symfony/console:^3.0; fi
   - if [[ $SYMFONY = '4.*' ]]; then composer require --no-update symfony/console:^4.0; fi
+  - if [[ $SYMFONY = '5.*' ]]; then composer require --no-update symfony/console:^5.0; fi
   - travis_retry composer self-update
 
 install:

@@ -171,7 +171,7 @@ class Application extends \Symfony\Component\Console\Application
 			$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
 			$output->writeln('');
 
-			if (Debugger::$browser) {
+			if (isset(Debugger::$browser)) {
 				if (!file_exists($file)) {
 					$file = Debugger::$logDirectory . '/' . $file;
 				}
@@ -197,5 +197,10 @@ class Application extends \Symfony\Component\Console\Application
 
 		return $definition;
 	}
+
+    public function renderException(\Exception $throwable, OutputInterface $output): void
+    {
+        $this->renderThrowable($throwable, $output);
+    }
 
 }
